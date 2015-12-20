@@ -1,90 +1,48 @@
-Geany Portable Launcher
-========================
-Copyright 2004-2008 John T. Haller
-Copyright 2007-2008 Patrick Patience
-Copyright 2007-2009 Oliver Krystal
+The base application's source code is available from the portable app's
+homepage listed in the help.html file (if applicable).
 
-Website: http://PortableApps.com/GeanyPortable
+Details of most other things are available there as well.
 
-This software is OSI Certified Open Source Software.
-OSI Certified is a certification mark of the Open Source Initiative.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-
-About Geany Portable
-====================
-The Geany Portable Launcher allows you to run Geany from a removable drive whose
-letter changes as you move it to another computer.  The program can be entirely
-self-contained on the drive and then used on any Windows computer.
-
-
-License
+LICENSE
 =======
-This code is released under the GPL.  The full code is included with this
-package as GeanyPortable.nsi.
 
+This package's installer and launcher are released under the GPL. The launcher
+is the PortableApps.com Launcher, available with full source and documentation
+from http://portableapps.com/development. We request that developers using the
+PortableApps.com Launcher please leave this directory intact and unchanged.
 
-Installation / Directory Structure
-==================================
-By default, the program expects this directory structure:
+USER CONFIGURATION
+==================
 
--\ <--- Directory with GeanyPortable.exe
-	+\App\
-		+\Geany\
-		+\GTK\
-		+\GTKLegacy\
-	+\Data\
-		+\settings\
-		+\fonts\ (optional)
+Some configuration in the PortableApps.com Launcher can be overridden by the
+user in an INI file next to GeanyPortable.exe called GeanyPortable.ini.
+If you are happy with the default options, it is not necessary, though.  There
+is an example INI included with this package to get you started.  To use it,
+copy AppNamePortable.ini from this directory to GeanyPortable.ini next to
+GeanyPortable.exe. The options in the INI file are as follows:
 
+   AdditionalParameters=
+   DisableSplashScreen=false
+   RunLocally=false
+   PathAdditions=
 
-It can be used in other directory configurations by including the GeanyPortable.ini file in the
-same directory as GeanyPortable.exe and configuring it as details in the INI file section below.
+(There is no need for an INI header in this file; if you have one, though, it
+won't damage anything.)
 
+The AdditionalParameters entry allows you to pass additional command-line
+parameters to the application.
 
-GeanyPortable.ini Configuration
-===============================
-The Geany Portable Launcher will look for an ini file called GeanyPortable.ini within its
-directory.  If you are happy with the default options, it is not necessary, though.  The INI
-file is formatted as follows:
+The DisableSplashScreen entry allows you to run the launcher without the splash
+screen showing up.  The default is false.
 
-[GeanyPortable]
-AdditionalParameters=
-DisableSplashScreen=false
-ApplicationLanguage=
-AdditionalFonts=false
-PathAdditions=
-
-The AdditionalParameters entry allows you to pass additional commandline parameter entries
-to Geany.exe.  Whatever you enter here will be appended to the call to Geany.exe.
-
-The DisableSplashScreen entry allows you to disable the splash screen by setting it to
-true (lowercase).
-
-The ApplicationLanguage entry allows you to specify for a language that Geany will start in.  This will over ride the menu settings.
-
-The AdditionalFonts entry allows you to specify if you would like Geany Portable to load extra fonts located in Data\fonts.  For more information
-see PortableFontby wraithdu -> http://portableapps.com/node/16003.  Set it to true if you wish the GeanyPortable launcher to load custom fonts
-for use in Geany.
+The RunLocally entry allows you to run the portable application from a read-
+only medium. This is known as Live mode. It copies what it needs to to a
+temporary directory on the host computer, runs the application, and then
+deletes it afterwards, leaving nothing behind. This can be useful for running
+the application from a CD or if you work on a computer that may have spyware or
+viruses and you'd like to keep your device set to read-only. As a consequence
+of this technique, any changes you make during the Live mode session aren't
+saved back to your device.  The default is false.
 
 The PathAdditions entry  allows you to specify from the root of the portable device locations to add to the path of Geany.  Use @Drive for the 
-drive letter.  Specify in the format @Drive\Perl\bin\perl.exe, etc.  Seperate with a semicolon ;)
-
-Program History / About the Authors
-===================================
-This launcher contains elements from multiple sources.  It is loosely based on the
-Firefox Portable launcher and contains some ideas from mai9 and tracon on the mozillaZine
-forums.
+drive letter.  Specify in the format @Drive\Perl\bin\perl.exe, etc.  Seperate with a semicolon.
