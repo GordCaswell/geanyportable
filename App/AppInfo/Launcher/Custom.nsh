@@ -1,11 +1,66 @@
 ${SegmentFile}
 
+!addincludedir "${PACKAGE}\App\AppInfo\Launcher"
+!include StrReplace.nsh
+
+/* The following 5 macros are taken from PAL's Variables.nsh, and adjusted in order to create
+ * a new environment variable using HTML encoding, as required by this app
+ */ 
+
+!define SetEnvironmentVariablesPathCustom "!insertmacro SetEnvironmentVariablesPathCallCustom"
+!macro SetEnvironmentVariablesPathCallCustom _VARIABLE_NAME _PATH
+	Push "${_VARIABLE_NAME}"
+	Push "${_PATH}"
+	${CallArtificialFunction2} SetEnvironmentVariablesPathCustom_
+!macroend
+
+!macro SetEnvironmentVariablesPathCustom_
+	/* This function sets environment variables with different formats for paths.
+	 * For example:
+	 *   ${SetEnvironmentVariablesPath} PortableApps.comAppDirectory $EXEDIR\App
+	 * Will produce the following environment variables:
+	 *   %PAL:AppDir%                 = X:\PortableApps\AppNamePortable\App
+	 *   %PAL:AppDir:Forwardslash%    = X:/PortableApps/AppNamePortable/App
+	 *   %PAL:AppDir:DoubleBackslash% = X:\\PortableApps\\AppNamePortable\\App
+	 *   %PAL:AppDir:java.util.prefs% = /X:///Portable/Apps///App/Name/Portable///App
+	 */
+	Exch $R0 ; path
+	Exch
+	Exch $R1 ; variable name
+
+	Push $R2 ; HTML colon
+	
+	Push $R3 ; HTML backslash
+	
+	;=== Make the HTML path (e.g. X%3A%5CPortableApps%5CAppNamePortable)
+	${WordReplace} $R0 : %3A + $R2
+	${WordReplace} $R2 \ %5C + $R3
+	${SetEnvironmentVariable} "$R1:HTMLBackslash" $R3
+!macroend
+
+!macro SetEnvironmentVariablesPathFromEnvironmentVariableCustom _VARIABLE_NAME
+	Push $R0
+	ReadEnvStr $R0 "${_VARIABLE_NAME}"
+	${SetEnvironmentVariablesPathCustom} "${_VARIABLE_NAME}" $R0
+	Pop $R0
+!macroend
+!define SetEnvironmentVariablesPathFromEnvironmentVariableCustom "!insertmacro SetEnvironmentVariablesPathFromEnvironmentVariableCustom"
+
+; Variables  for Above
+Var AppDirectory
+Var DataDirectory
+Var PortableAppsDirectory
+
+Var PortableAppsBaseDirectory
+Var LastPortableAppsBaseDirectory
+
+; Geany variables
 Var GTKBookmarks
 Var ExistsXBEL
 Var ExistsFileChooser
 
 ${SegmentInit}
-	${ReadUserConfig} $0 OpenGL
+	${ReadUserConfig} $0 PathAdditions
 	${IfNot} $0 == ""
 		StrCpy $1 "" 
 		StrCmp $0 "" +4 0
@@ -13,6 +68,13 @@ ${SegmentInit}
 		${StrReplace} '$1' '@Drive' '$1' '$0'
 		WriteINIStr $EXEDIR\App\AppInfo\Launcher\$AppID.ini Environment PATH "%PAL:AppDir%\Geany\bin;%PAL:AppDir%\Geany;$0;%PATH%"
 	${EndIf}
+!macroend
+
+${SegmentPre}
+	${SetEnvironmentVariablesPathCustom} PAL:PortableAppsBaseDir $PAL:PortableAppsBaseDirectory
+	${SetEnvironmentVariablesPathCustom} PAL:LastPortableAppsBaseDir $PAL:LastPortableAppsBaseDirectory
+	${SetEnvironmentVariablesPathCustom} PAL:PackagePartialDir $PAL:PackagePartialDir
+	${SetEnvironmentVariablesPathCustom} PAL:LastPackagePartialDir $PAL:LastPackagePartialDir
 !macroend
 
 ${SegmentPrePrimary}

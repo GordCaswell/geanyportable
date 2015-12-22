@@ -44,5 +44,6 @@ viruses and you'd like to keep your device set to read-only. As a consequence
 of this technique, any changes you make during the Live mode session aren't
 saved back to your device.  The default is false.
 
-The PathAdditions entry  allows you to specify from the root of the portable device locations to add to the path of Geany.  Use @Drive for the 
-drive letter.  Specify in the format @Drive\Perl\bin\perl.exe, etc.  Seperate with a semicolon.
+The PathAdditions entry  allows you to specify from the root of the portable
+device locations to add to the path of Geany.  Use @Drive for the drive letter.
+Specify in the format @Drive\Perl\bin\perl.exe, etc.  Separate with a semicolon.
