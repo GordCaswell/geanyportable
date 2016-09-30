@@ -957,6 +957,118 @@ typedef enum {
 } SpawnFlags;
 
 
+
+
+/**
+ * TMTagType: 
+ * @tm_tag_undef_t:  Unknown type.
+ * @tm_tag_class_t:  Class declaration.
+ * @tm_tag_enum_t:  Enum declaration.
+ * @tm_tag_enumerator_t:  Enumerator value.
+ * @tm_tag_field_t:  Field (Java only)
+ * @tm_tag_function_t:  Function definition.
+ * @tm_tag_interface_t:  Interface (Java only)
+ * @tm_tag_member_t:  Member variable of class/struct.
+ * @tm_tag_method_t:  Class method (Java only)
+ * @tm_tag_namespace_t:  Namespace declaration.
+ * @tm_tag_package_t:  Package (Java only)
+ * @tm_tag_prototype_t:  Function prototype.
+ * @tm_tag_struct_t:  Struct declaration.
+ * @tm_tag_typedef_t:  Typedef.
+ * @tm_tag_union_t:  Union.
+ * @tm_tag_variable_t:  Variable.
+ * @tm_tag_externvar_t:  Extern or forward declaration.
+ * @tm_tag_macro_t:  Macro (without arguments)
+ * @tm_tag_macro_with_arg_t:  Parameterized macro.
+ * @tm_tag_file_t:  File (Pseudo tag) - obsolete.
+ * @tm_tag_other_t:  Other (non C/C++/Java tag)
+ * @tm_tag_max_t:  Maximum value of TMTagType.
+ *
+ * 
+ * Types of tags. 
+ *         
+ *
+ * 
+ *
+ */
+typedef enum {
+	tm_tag_undef_t = 0,
+	tm_tag_class_t = 1,
+	tm_tag_enum_t = 2,
+	tm_tag_enumerator_t = 4,
+	tm_tag_field_t = 8,
+	tm_tag_function_t = 16,
+	tm_tag_interface_t = 32,
+	tm_tag_member_t = 64,
+	tm_tag_method_t = 128,
+	tm_tag_namespace_t = 256,
+	tm_tag_package_t = 512,
+	tm_tag_prototype_t = 1024,
+	tm_tag_struct_t = 2048,
+	tm_tag_typedef_t = 4096,
+	tm_tag_union_t = 8192,
+	tm_tag_variable_t = 16384,
+	tm_tag_externvar_t = 32768,
+	tm_tag_macro_t = 65536,
+	tm_tag_macro_with_arg_t = 131072,
+	tm_tag_file_t = 262144,
+	tm_tag_other_t = 524288,
+	tm_tag_max_t = 1048575,
+} TMTagType;
+
+
+
+
+/**
+ * TMTagAttrType: 
+ * @tm_tag_attr_none_t:  Undefined.
+ * @tm_tag_attr_name_t:  Tag Name.
+ * @tm_tag_attr_type_t:  Tag Type.
+ * @tm_tag_attr_file_t:  File in which tag exists.
+ * @tm_tag_attr_line_t:  Line number of tag.
+ * @tm_tag_attr_pos_t:  Byte position of tag in the file (Obsolete)
+ * @tm_tag_attr_scope_t:  Scope of the tag.
+ * @tm_tag_attr_inheritance_t:  Parent classes.
+ * @tm_tag_attr_arglist_t:  Argument list.
+ * @tm_tag_attr_local_t:  If it has local scope.
+ * @tm_tag_attr_time_t:  Modification time (File tag only)
+ * @tm_tag_attr_vartype_t:  Variable Type.
+ * @tm_tag_attr_access_t:  Access type (public/protected/private)
+ * @tm_tag_attr_impl_t:  Implementation (e.g.
+ * @tm_tag_attr_lang_t:  Language (File tag only)
+ * @tm_tag_attr_inactive_t:  Inactive file (File tag only, obsolete)
+ * @tm_tag_attr_pointer_t:  Pointer type.
+ * @tm_tag_attr_max_t:  Maximum value.
+ *
+ * 
+ * Tag Attributes. 
+ *         
+ *
+ * 
+ *
+ */
+typedef enum {
+	tm_tag_attr_none_t = 0,
+	tm_tag_attr_name_t = 1,
+	tm_tag_attr_type_t = 2,
+	tm_tag_attr_file_t = 4,
+	tm_tag_attr_line_t = 8,
+	tm_tag_attr_pos_t = 16,
+	tm_tag_attr_scope_t = 32,
+	tm_tag_attr_inheritance_t = 64,
+	tm_tag_attr_arglist_t = 128,
+	tm_tag_attr_local_t = 256,
+	tm_tag_attr_time_t = 512,
+	tm_tag_attr_vartype_t = 1024,
+	tm_tag_attr_access_t = 2048,
+	tm_tag_attr_impl_t = 4096,
+	tm_tag_attr_lang_t = 8192,
+	tm_tag_attr_inactive_t = 16384,
+	tm_tag_attr_pointer_t = 32768,
+	tm_tag_attr_max_t = 65535,
+} TMTagAttrType;
+
+
 typedef struct GeanyApp  GeanyApp;
 
 typedef struct GeanyFilePrefs  GeanyFilePrefs;
@@ -968,8 +1080,6 @@ typedef struct GeanyIndentPrefs  GeanyIndentPrefs;
 typedef struct GeanyEditorPrefs  GeanyEditorPrefs;
 
 typedef struct GeanyEditor  GeanyEditor;
-
-typedef struct SCNotification SCNotification;
 
 typedef GeanyFiletypeID filetype_id;
 
@@ -1049,9 +1159,9 @@ typedef struct GeanyTemplatePrefs  GeanyTemplatePrefs;
 
 typedef gint TMParserType;
 
-typedef void tagEntryInfo;
-
 typedef struct TMSourceFile  TMSourceFile;
+
+typedef struct TMTag  TMTag;
 
 typedef struct TMWorkspace  TMWorkspace;
 
@@ -1060,6 +1170,44 @@ typedef struct GeanyToolbarPrefs  GeanyToolbarPrefs;
 typedef struct GeanyInterfacePrefs  GeanyInterfacePrefs;
 
 typedef struct GeanyMainWidgets  GeanyMainWidgets;
+
+
+
+/**
+ * _GeanyObject: 
+ * @parent:  
+ *
+ * 
+ * Instance structure for GeanyObject. 
+ *     
+ *
+ * 
+ *
+ */
+struct _GeanyObject {
+	/*< private >*/
+	GObject parent;
+};
+
+
+
+
+/**
+ * _GeanyObjectClass: 
+ * @parent_class:  
+ *
+ * 
+ * Class structure for @GeanyObject. 
+ *     
+ *
+ * 
+ *
+ */
+struct _GeanyObjectClass {
+	/*< private >*/
+	GObjectClass parent_class;
+};
+
 
 
 
@@ -1123,8 +1271,8 @@ struct GeanyApp {
  * GeanyData: 
  * @app:  Geany application data fields.
  * @main_widgets:  Important widgets in the main window.
- * @documents_array: (element-type GeanyDocument):  See document.h::documents_array.
- * @filetypes_array: (element-type GeanyFiletype):  Dynamic array of GeanyFiletype pointers.
+ * @documents_array: (element-type GeanyDocument):  Dynamic array of GeanyDocument pointers.
+ * @filetypes_array: (element-type GeanyFiletype):  Dynamic array of filetype pointers.
  * @prefs:  General settings.
  * @interface_prefs:  Interface settings.
  * @toolbar_prefs:  Toolbar settings.
@@ -1134,7 +1282,8 @@ struct GeanyApp {
  * @tool_prefs:  Tool settings.
  * @template_prefs:  Template settings.
  * @_compat:  
- * @filetypes_by_title:  See filetypes.h::filetypes_by_title.
+ * @filetypes_by_title: (element-type GeanyFiletype):  List of filetype pointers sorted by name, but with filetypes_index(GEANY_FILETYPES_NONE) first, as this is usually treated specially.
+ * @object:  Global object signalling events via signals.
  *
  * 
  * This contains pointers to global variables owned by Geany for plugins to use. 
@@ -1172,6 +1321,8 @@ struct GeanyData {
 	gpointer* _compat;
 	/*< public >*/
 	GSList* filetypes_by_title;
+	/*< public >*/
+	GObject* object;
 };
 
 
@@ -1179,7 +1330,7 @@ struct GeanyData {
 
 /**
  * GeanyDocument: 
- * @is_valid:  Flag used to check if this document is valid when iterating documents_array.
+ * @is_valid:  Flag used to check if this document is valid when iterating GeanyData::documents_array.
  * @index:  Index in the documents array.
  * @has_tags:  Whether this document supports source code symbols(tags) to show in the sidebar.
  * @file_name:  The UTF-8 encoded file name.
@@ -2160,7 +2311,7 @@ struct PluginInfo {
  * @lang:  
  * @file_name:  Full file name (inc.
  * @short_name:  Just the name of the file (without the path)
- * @tags_array:  Sorted tag array obtained by parsing the object.
+ * @tags_array: (element-type TMTag):  Sorted tag array obtained by parsing the object.
  *
  * 
  * The TMSourceFile structure represents the source file and its tags in the tag manager. 
@@ -2184,10 +2335,68 @@ struct TMSourceFile {
 
 
 /**
+ * TMTag: 
+ * @name:  Name of tag.
+ * @type:  Tag Type.
+ * @refcount:  
+ * @file:  These are tag attributes.
+ * @line:  Line number of the tag.
+ * @local:  Is the tag of local scope.
+ * @pointerOrder:  
+ * @arglist:  Argument list (functions/prototypes/macros)
+ * @scope:  Scope of tag.
+ * @inheritance:  Parent classes.
+ * @var_type:  Variable type (maps to struct for typedefs)
+ * @access:  Access type (public/protected/private/etc.)
+ * @impl:  Implementation (e.g.
+ * @lang:  
+ *
+ * 
+ * The TMTag structure represents a single tag in the tag manager. 
+ *     
+ *
+ * 
+ *
+ */
+struct TMTag {
+	/*< public >*/
+	char* name;
+	/*< public >*/
+	TMTagType type;
+	/*< private >*/
+	gint refcount;
+	/*< public >*/
+	TMSourceFile* file;
+	/*< public >*/
+	gulong line;
+	/*< public >*/
+	gboolean local;
+	/*< private >*/
+	guint pointerOrder;
+	/*< public >*/
+	char* arglist;
+	/*< public >*/
+	char* scope;
+	/*< public >*/
+	char* inheritance;
+	/*< public >*/
+	char* var_type;
+	/*< public >*/
+	char access;
+	/*< public >*/
+	char impl;
+	/*< private >*/
+	TMParserType lang;
+};
+
+
+
+
+/**
  * TMWorkspace: 
- * @global_tags:  Global tags loaded at startup.
- * @source_files:  An array of TMSourceFile pointers.
- * @tags_array:  Sorted tags from all source files (just pointers to source file tags, the tag objects are owned by the source files)
+ * @global_tags: (element-type TMTag):  Global tags loaded at startup.
+ * @source_files: (element-type TMSourceFile):  An array of TMSourceFile pointers.
+ * @tags_array: (element-type TMTag):  Sorted tags from all source files (just pointers to source file tags, the tag objects are owned by the source files).
  * @typename_array:  
  * @global_typename_array:  
  *
@@ -2917,10 +3126,10 @@ const GdkColor* document_get_status_color (GeanyDocument *doc);
 
 /**
  * document_index: 
- * @idx:  documents_array index.
+ * @idx:  GeanyData::documents_array index.
  *
  * 
- * Accessor function for documents_array items. 
+ * Accessor function for GeanyData::documents_array items. 
  *         
  *
  * 
@@ -3024,6 +3233,24 @@ gint document_compare_by_tab_order (gconstpointer a, gconstpointer b);
  * Since: 0.21 (GEANY_API_VERSION 209)
  */
 gint document_compare_by_tab_order_reverse (gconstpointer a, gconstpointer b);
+
+
+
+/**
+ * document_get_type: 
+ *
+ * 
+ * Gets the GType of GeanyDocument. 
+ *         
+ *
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  the GeanyDocument type
+ */
+GType document_get_type (void);
 
 
 
@@ -3407,6 +3634,24 @@ void editor_insert_snippet (GeanyEditor *editor, gint pos, const gchar *snippet)
 
 
 /**
+ * editor_get_type: 
+ *
+ * 
+ * Gets the GType of GeanyEditor. 
+ *         
+ *
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  the GeanyEditor type
+ */
+GType editor_get_type (void);
+
+
+
+/**
  * encodings_get_charset_from_index: 
  * @idx:  GeanyEncodingIndex to retrieve the corresponding character set.
  *
@@ -3586,6 +3831,42 @@ GeanyFiletype* filetypes_index (gint idx);
  * Since: Geany 0.20
  */
 const gchar* filetypes_get_display_name (GeanyFiletype *ft);
+
+
+
+/**
+ * filetype_get_type: 
+ *
+ * 
+ * Gets the GType of GeanyFiletype. 
+ *         
+ *
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  the GeanyFiletype type
+ */
+GType filetype_get_type (void);
+
+
+
+/**
+ * geany_object_get_type: 
+ *
+ * 
+ * Get the GObject-derived GType for GeanyObject. 
+ *         
+ *
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  GeanyObject type
+ */
+GType geany_object_get_type (void);
 
 
 
@@ -4290,7 +4571,7 @@ void plugin_cleanup ();
  *         
  *
  * 
- * This may open a dialog, a browser with a website or a local installed HTML help file(see utils_open_browser()) or something else. Can be omitted when not needed. 
+ * This may open a dialog, a browser with a website or a local installed HTML help file (see utils_open_browser()) or something else. Can be omitted when not needed. 
  *         
  *
  */
@@ -7513,7 +7794,7 @@ gboolean utils_spawn_sync (const gchar *dir, gchar **argv, gchar **env, GSpawnFl
  * @flags:  Ignored.
  * @child_setup: (skip):  Ignored.
  * @user_data:  Ignored.
- * @child_pid: (nullable):  The return location for child process ID, or %NULL.
+ * @child_pid: (out) (nullable):  The return location for child process ID, or %NULL.
  * @error:  The return location for error or %NULL.
  *
  * 
