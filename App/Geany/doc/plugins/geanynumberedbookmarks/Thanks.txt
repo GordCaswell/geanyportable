@@ -1,2 +1,0 @@
-A huge thanks to Frank Lanitz who has guided me through adding my plugin, helped me with
-several code compatibility problems, and has suggested some ideas for the plugin.

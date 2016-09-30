@@ -1,3 +1,0 @@
-0.20 (22.08.2010)
-
-	* Initial Upload to svn 
