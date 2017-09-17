@@ -1,5 +1,5 @@
-﻿;Copyright (C) 2007-2011 Oliver Krystal
-;Copyright (C) 2004-2012 John T. Haller
+﻿;Copyright (C) 2004-2017 John T. Haller
+;Copyright (C) 2007-2011 Oliver Krystal
 ;Copyright (C) 2007-2008 Patrick Patience
 ;This app utilizes some of Erik Pilsits code for implementation of portable fonts.  Applicable copyrights apply. See http://portableapps.com/node/16003 for more information
 
@@ -26,7 +26,7 @@
 !define NAME "GeanyPortable"
 !define PORTABLEAPPNAME "Geany Portable"
 !define APPNAME "Geany"
-!define VER "1.9.2.0" ;increment for official release
+!define VER "1.9.3.0" ;increment for official release
 !define WEBSITE "PortableApps.com/GeanyPortable"
 !define DEFAULTEXE "Geany.exe"
 !define DEFAULTAPPDIR "Geany\bin"
@@ -62,8 +62,9 @@ WindowIcon Off
 SilentInstall Silent
 AutoCloseWindow True
 RequestExecutionLevel user
-; XP Style
 XPStyle on
+Unicode true
+ManifestDPIAware true
 
 ; Best Compression
 SetCompress Auto

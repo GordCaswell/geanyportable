@@ -665,6 +665,7 @@ typedef enum {
  * @GEANY_KEYS_FORMAT_SENDTOCMD7:  Keybinding.
  * @GEANY_KEYS_FORMAT_SENDTOCMD8:  Keybinding.
  * @GEANY_KEYS_FORMAT_SENDTOCMD9:  Keybinding.
+ * @GEANY_KEYS_EDITOR_DELETELINETOBEGINNING:  Keybinding.
  * @GEANY_KEYS_COUNT:  
  *
  * 
@@ -823,6 +824,7 @@ typedef enum {
 	GEANY_KEYS_FORMAT_SENDTOCMD7,
 	GEANY_KEYS_FORMAT_SENDTOCMD8,
 	GEANY_KEYS_FORMAT_SENDTOCMD9,
+	GEANY_KEYS_EDITOR_DELETELINETOBEGINNING,
 	GEANY_KEYS_COUNT,
 } GeanyKeyBindingID;
 
@@ -881,9 +883,9 @@ typedef enum {
 
 /**
  * GeanyProxyProbeResults: 
- * @PROXY_IGNORED:  The proxy is not responsible at all, and Geany or other plugins are free to probe it.
- * @PROXY_MATCHED:  The proxy is responsible for this file, and creates a plugin for it.
- * @PROXY_NOLOAD:  The proxy is does not directly load it, but it's still tied to the proxy.
+ * @GEANY_PROXY_IGNORE:  The proxy is not responsible at all, and Geany or other plugins are free to probe it.
+ * @GEANY_PROXY_MATCH:  The proxy is responsible for this file, and creates a plugin for it.
+ * @GEANY_PROXY_RELATED:  The proxy is does not directly load it, but it's still tied to the proxy.
  *
  * 
  * Return values for GeanyProxyHooks::probe() 
@@ -893,9 +895,9 @@ typedef enum {
  *
  */
 typedef enum {
-	PROXY_IGNORED,
-	PROXY_MATCHED,
-	PROXY_NOLOAD = 0x100,
+	GEANY_PROXY_IGNORE,
+	GEANY_PROXY_MATCH,
+	GEANY_PROXY_RELATED = GEANY_PROXY_MATCH | 0x100,
 } GeanyProxyProbeResults;
 
 
@@ -1466,6 +1468,7 @@ struct GeanyEditor {
  * @show_virtual_space:  
  * @long_line_enabled:  
  * @autocompletion_update_freq:  
+ * @scroll_lines_around_cursor:  
  *
  * 
  * Default prefs when creating a new editor window. 
@@ -1551,6 +1554,8 @@ struct GeanyEditorPrefs {
 	gboolean long_line_enabled;
 	/*< private >*/
 	gint autocompletion_update_freq;
+	/*< private >*/
+	gint scroll_lines_around_cursor;
 };
 
 
@@ -4580,6 +4585,28 @@ void plugin_help ();
 
 
 /**
+ * geany_api_version: 
+ *
+ * 
+ * Returns the runtime API version Geany was compiled with. 
+ *         
+ *
+ * 
+ * Unlike GEANY_API_VERSION this version is the value of that define at the time when Geany itself was compiled. This allows to establish soft dependencies which are resolved at runtime depending on Geany's API version.
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  Geany's API version
+ *
+ * Since: 1.30 (API 231)
+ */
+gint geany_api_version (void);
+
+
+
+/**
  * plugin_add_toolbar_item: 
  * @plugin:  Must be geany_plugin.
  * @item:  The item to add.
@@ -4892,6 +4919,128 @@ void plugin_builder_connect_signals (GeanyPlugin *plugin, GtkBuilder *builder, g
  * Since: 1.26 (API 225)
  */
 void geany_plugin_set_data (GeanyPlugin *plugin, gpointer pdata, GDestroyNotify free_func);
+
+
+
+/**
+ * plugin_get_document_data: 
+ * @plugin:  The plugin who attached the data.
+ * @doc:  The document which the data was attached to.
+ * @key:  The key name of the attached data.
+ *
+ * 
+ * Retrieve plugin-specific data attached to a document. 
+ *         
+ *
+ * 
+ * 
+ * 
+ * 
+ * See plugin_set_document_data plugin_set_document_data_full 
+ * 
+ * 
+ * 
+ *         
+ *
+ * Returns:  The attached data pointer or %NULL if the key is not found for the given plugin.
+ *
+ * Since: 1.29 (Plugin API 228)
+ */
+gpointer plugin_get_document_data (struct GeanyPlugin *plugin, struct GeanyDocument *doc, const gchar *key);
+
+
+
+/**
+ * plugin_set_document_data: 
+ * @plugin:  The plugin attaching data to the document.
+ * @doc:  The document to attach the data to.
+ * @key:  The key name for the data.
+ * @data:  The pointer to attach to the document.
+ *
+ * 
+ * Attach plugin-specific data to a document. 
+ *         
+ *
+ * 
+ * 
+ * 
+ * See plugin_get_document_data plugin_set_document_data_full 
+ * 
+ * 
+ * 
+ *         
+ *
+ *
+ * Since: 1.29 (Plugin API 228)
+ */
+void plugin_set_document_data (struct GeanyPlugin *plugin, struct GeanyDocument *doc, const gchar *key, gpointer data);
+
+
+
+/**
+ * plugin_set_document_data_full: 
+ * @plugin:  The plugin attaching data to the document.
+ * @doc:  The document to attach the data to.
+ * @key:  The key name for the data.
+ * @data:  The pointer to attach to the document.
+ * @free_func:  The function to call with data when removed.
+ *
+ * 
+ * Attach plugin-specific data and a free function to a document. 
+ *         
+ *
+ * 
+ * This is useful for plugins who want to keep some additional data with the document and even have it auto-released appropriately (see below).
+ * This is a simple example showing how a plugin might use this to attach a string to each document and print it when the document is saved:
+ * 
+ * |[<!-- language="C" -->
+ *   void on_document_open(GObject *unused, GeanyDocument *doc, GeanyPlugin *plugin)
+ *   {
+ *       plugin_set_document_data_full(plugin, doc, "my-data",
+ *           g_strdup("some-data"), g_free);
+ *   }
+ *   void on_document_save(GObject *unused, GeanyDocument *doc, GeanyPlugin *plugin)
+ *   {
+ *       const gchar *some_data = plugin_get_document_data(plugin, doc, "my-data");
+ *       g_print("my-data: %s", some_data);
+ *   }
+ *   gboolean plugin_init(GeanyPlugin *plugin, gpointer unused)
+ *   {
+ *       plugin_signal_connect(plugin, NULL, "document-open", TRUE,
+ *           G_CALLBACK(on_document_open), plugin);
+ *       plugin_signal_connect(plugin, NULL, "document-new", TRUE,
+ *           G_CALLBACK(on_document_open), plugin);
+ *       plugin_signal_connect(plugin, NULL, "document-save", TRUE,
+ *           G_CALLBACK(on_document_save), plugin);
+ *       return TRUE;
+ *   }
+ *   void geany_load_module(GeanyPlugin *plugin)
+ *   {
+ *     // ...
+ *     plugin->funcs->init = plugin_init;
+ *     // ...
+ *   }
+ * ]|
+ * The @free_func can be used to tie the lifetime of the data to that of the @doc and/or the @plugin. The @free_func will be called in any of the following cases:
+ * 
+ * 
+ *  - When a document is closed.
+ *  - When the plugin is unloaded.
+ *  - When the document data is set again using the same key.
+ * 
+ * 
+ * 
+ * 
+ * See plugin_get_document_data plugin_set_document_data 
+ * 
+ * 
+ * 
+ *         
+ *
+ *
+ * Since: 1.29 (Plugin API 228)
+ */
+void plugin_set_document_data_full (struct GeanyPlugin *plugin, struct GeanyDocument *doc, const gchar *key, gpointer data, GDestroyNotify free_func);
 
 
 
@@ -6879,6 +7028,7 @@ void ui_add_document_sensitive (GtkWidget *widget);
  * 
  * 
  * 
+ * Deprecated: 1.29: Use GTK API directly 
  * 
  *         
  *
